@@ -1,121 +1,189 @@
-
-
-public static void printElement(ArrayList<Integer> list, int index){
-    try {
-        System.out.println(list.get(index));
-    }catch (IndexOutOfBoundsException e){
-        System.out.println("Неверный индекс");
-    }
+public static void task0_1(){
+    HashMap<String, String> phonebook = new HashMap<>();
+    phonebook.put("Ann","123");
+    phonebook.put("Kate","234");
+    phonebook.put("Dan","345");
+    phonebook.put("Ben","456");
+    phonebook.put("Alex","567");
+    System.out.println("Ben");
+    System.out.println(phonebook.containsValue("456"));
 }
 
-public static ArrayList<Integer> convertAndStore(String[]arrStr){
-    ArrayList<Integer> arr = new ArrayList<>();
-    for(String item: arrStr){
-        try {
-            int num = Integer.parseInt(item);
-            arr.add(num);
-        }catch (NumberFormatException e){
-            System.out.println("Ошибка ввода");
-        }
-    }
-    return arr;
-}
-
-public static void Task0_4(ArrayList<Integer> arr){
-    arr.add(arr.size()/2, 100);
-    System.out.println(arr);
-    for(int i= arr.size()-1; i>=0; i--){
-        if(arr.get(i)<0){
-            arr.remove(i);
-        }
-    }
-    System.out.println(arr);
-
-}
-public static void divideElements(ArrayList<Integer> list, int divisor){
-
-//        try{
-//            for(int item: list) {
-//                System.out.println(item / divisor);
-//            }
-//        }catch (ArithmeticException e){
-//            System.out.println("0");
-//        }catch (NullPointerException e){
-//            System.out.println("null");
-//        }
-    try {
-        if(list == null){
-            throw new NullPointerException();
-        }
-
-        for(int item : list){
-            System.out.println(item / divisor);
-        }
-
-    } catch (ArithmeticException e){
-        System.out.println("Деление на 0 невозможно");
-    } catch (NullPointerException e){
-        System.out.println("Список равен null");
-    }
-}
-
-public static void task0_6(ArrayList<Integer> list){
-
-    try{
-        for(int item: list){
-            if (item<0||item>120)
-                throw new IllegalArgumentException("age");
-        }
-    }catch(IllegalArgumentException e){
-        System.out.println(e.getMessage());
-
-    }
-}
-
-public static void removeAt(ArrayList<Integer> list, String indexText){
-    try{
-        int ind = Integer.parseInt(indexText);
-        list.remove(ind);
-    }catch(NumberFormatException e){
-        System.out.println("not a number");
-    }catch (IndexOutOfBoundsException e){
-        System.out.println("index");
-    }
-}
-
-public static int task0_11(ArrayList<String> list){
-    int sum = 0;
+public static void task0_2(){
+    var list = new ArrayList<>(Arrays.asList("Anna", "Ivan", "Anna", "Oleg", "Ivan", "Anna"));
+    HashMap<String, Integer> map = new HashMap<>();
     for(String item: list){
-        try{
-            int num = Integer.parseInt(item);
-            if(num<0) throw new IllegalArgumentException();
-            else sum+=num;
-        }catch(NumberFormatException e){
-            System.out.println("not a number");
-        }catch (IllegalArgumentException e){
-            System.out.println("negative");
+        if(map.containsKey(item)){
+            map.put(item, map.get(item)+1);
+        }else map.put(item, 1);
+    }
+    for(var item: map.entrySet()){
+        System.out.println(item.getKey()+"->"+item.getValue());
+    }
+}
+
+public static void task0_3(){
+    HashMap<String, Integer> map = new HashMap<>();
+
+}
+
+public static void task0_3AddProduct(HashMap<String, Integer> stock, String productName,int quantity){
+    System.out.println("Add");
+    if(quantity<=0)
+        throw new IllegalArgumentException("Количество должно быть > 0");
+    if(stock.containsKey(productName)){
+        stock.put(productName, stock.get(productName)+quantity );
+    }else {
+        stock.put(productName, quantity);
+    }
+}
+
+public static void task0_3SellProduct(HashMap<String, Integer> stock, String productName,int quantity){
+    System.out.println("Sell");
+    if(!stock.containsKey(productName))
+        throw new NoSuchElementException("Товар отсутствует на складе");
+    if (quantity<=0)
+        throw new IllegalArgumentException("Количество продажи должно быть > 0");
+    if (stock.get(productName)<quantity)
+        throw new IllegalStateException("Недостаточно товара на складе");
+
+    stock.put(productName, stock.get(productName)-quantity);
+}
+
+public static void task0_3PrintStock(HashMap<String, Integer> stock){
+    System.out.println("Stock: ");
+    for (var item: stock.entrySet()){
+        System.out.println(item.getKey()+"->"+item.getValue());
+    }
+}
+
+public static ArrayList<String> task0_4(ArrayList<String> list){
+    HashMap<String, Integer> map = new HashMap<>();
+    ArrayList<String> duplicateLogins = new ArrayList<>();
+    for(var item: list){
+        if(map.containsKey(item))
+            map.put(item,map.get(item)+1);
+        else
+            map.put(item, 1);
+    }
+    for (var item: map.entrySet()){
+        if(item.getValue()>1)
+            duplicateLogins.add(item.getKey());
+    }
+    return duplicateLogins;
+}
+
+public static HashMap<String, Integer> task0_5(ArrayList<String> list){
+    HashMap<String, Integer> originalMap = new HashMap<>();
+    for(String item: list){
+        String[] itemData = item.split(" ");
+        String itemName = itemData[0];
+        int itemAmount  = Integer.parseInt(itemData[1]);
+        int newVal = originalMap.getOrDefault(itemName,0)+itemAmount;
+
+        originalMap.put(itemName, newVal);
+    }
+    return originalMap;
+}
+
+public  static void task0_6AddOrUpdatePlayer(HashMap<String, Integer> players, String playerName, String scoreToAddStr){
+    int score = Integer.parseInt(scoreToAddStr);
+    if(score<0) throw new IllegalArgumentException("score have to be positive");
+    int newScoreVal = players.getOrDefault(playerName,0)+score;
+    players.put(playerName, newScoreVal);
+}
+public static String task0_6GetTopPlayer(HashMap<String, Integer> players){
+    String topPlayer = "";
+    int max = 0;
+    for(var item: players.entrySet()){
+        if(item.getValue()>max){
+            max=item.getValue();
+            topPlayer=item.getKey();
         }
     }
-    return sum;
+    return topPlayer;
+}
+public static void task0_6RemovePlayer(HashMap<String, Integer> players, String playerName){
+    if(players.containsKey(playerName)){
+        players.remove(playerName);
+        System.out.println(playerName + " was deleted");
+    }
+    else
+        System.out.println(playerName + " not found");
 }
 public static void main(String[] args){
-    ArrayList<Integer> arr = new ArrayList<>();
-//    ArrayList<Integer> arr = null;
-    arr.add(34);
-    arr.add(-34);
-    arr.add(-634);
-    arr.add(6434);
-    arr.add(234);
-    System.out.println(arr);
-//    Task0_4(arr);
-    removeAt(arr, "4");
 
-    ArrayList<String> list = new ArrayList<>();
-    list.add("10");
-    list.add("-150");
-    list.add("20");
-    list.add("90");
-    list.add("1034df");
-    list.add("10df");
-    System.out.println(task0_11(list));
+//    task0_1();
+//    task0_2();
+
+    //task0_3
+//    HashMap<String, Integer> stock = new HashMap<>();
+//    stock.put("Apple", 5);
+//    stock.put("Banana", 3);
+//    stock.put("Orange", 7);
+//    try{
+//        task0_3PrintStock(stock);
+//        task0_3AddProduct(stock, "Apple", -10);
+//        task0_3PrintStock(stock);
+//        task0_3AddProduct(stock, "Kiwi", 8);
+//        task0_3PrintStock(stock);
+//        task0_3SellProduct(stock, "Kiwi", 4);
+//        task0_3PrintStock(stock);
+//
+//    }catch(Exception e){
+//        System.out.println(e.getMessage());
+//    }
+
+    //task0_4
+//    ArrayList<String> logins = new ArrayList<>(Arrays.asList(
+//            "alice", "bob", "charlie", "alice", "david", "bob", "eve", "frank"
+//    ));
+//    System.out.println(task0_4(logins));
+
+    //task0_5
+//    ArrayList<String> list = new ArrayList<>(Arrays.asList("Food t50", "Transport 20", "Food 30", "Entertainment 100"));
+//    System.out.println();
+//    try{
+//        System.out.println(task0_5(list));
+//    }catch(NumberFormatException e){
+//        System.out.println(e.getMessage());
+//    }
+
+    //task 0_6
+    String[] startingPlayers= {
+            "Alice 50",
+            "Bob 30",
+            "Charlie 40",
+            "Diana 25",
+            "Ethan 60"
+    };
+    HashMap<String, Integer> map = new HashMap<>();
+    for(String item: startingPlayers){
+        String player = item.substring(0, item.indexOf(" "));
+        String score = item.substring(item.indexOf(" ")+1);
+        try{
+            map.put(player, Integer.parseInt(score));
+        }catch(NumberFormatException e){
+            System.out.println("score " + score+ " is not a number");
+        }
+    }
+    System.out.println(map);
+
+    try{
+        task0_6AddOrUpdatePlayer(map, "Dan", "22");
+        task0_6AddOrUpdatePlayer(map, "Diana", "10");
+        System.out.println(map);
+        task0_6RemovePlayer(map, "Bыob");
+        System.out.println(map);
+
+    }catch(NumberFormatException e){
+        System.out.println(e.getMessage());
+    }
+
+
+    System.out.println(task0_6GetTopPlayer(map));
+
+
+
+
 }
