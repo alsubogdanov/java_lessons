@@ -1,188 +1,141 @@
-public static void task0_1(){
-    HashMap<String, String> phonebook = new HashMap<>();
-    phonebook.put("Ann","123");
-    phonebook.put("Kate","234");
-    phonebook.put("Dan","345");
-    phonebook.put("Ben","456");
-    phonebook.put("Alex","567");
-    System.out.println("Ben");
-    System.out.println(phonebook.containsValue("456"));
+
+public static ArrayList<String> task0_1_readFile(String filename) throws IOException{
+//    Path p = Path.of(filename);
+//    String content = Files.readString(p);
+//
+//    ArrayList<String> list = new ArrayList<>();
+//    int ind = 0;
+//
+//    while (ind <= content.length()) {
+//        int enterInd = content.indexOf("\n", ind);
+//
+//        if (enterInd == -1) {
+//            enterInd = content.length();
+//        }
+//
+//        String item = content.substring(ind, enterInd).strip();
+//        list.add(item);
+//
+//        ind = enterInd + 1;
+//
+//        if (enterInd == content.length()) {
+//            break;
+//        }
+//    }
+//
+//    return list;
+
+    return (ArrayList<String>) Files.readAllLines(Path.of(filename));
+}
+public static void task0_1_writeFile(ArrayList<String> list, String filename) throws IOException{
+//    StringBuilder listStr = new StringBuilder();
+//    for(String item: list){
+//        listStr.append(item + "\n");
+//    }
+//    String content=listStr.toString();
+//    Path p = Path.of(filename);
+//    Files.writeString(p, content);
+    Files.write(Path.of(filename),list);
+
 }
 
-public static void task0_2(){
-    var list = new ArrayList<>(Arrays.asList("Anna", "Ivan", "Anna", "Oleg", "Ivan", "Anna"));
-    HashMap<String, Integer> map = new HashMap<>();
-    for(String item: list){
-        if(map.containsKey(item)){
-            map.put(item, map.get(item)+1);
-        }else map.put(item, 1);
-    }
-    for(var item: map.entrySet()){
-        System.out.println(item.getKey()+"->"+item.getValue());
-    }
-}
+public static void task0_2(String filename)throws IOException{
+    String content = Files.readString(Path.of(filename)).strip();
+    int spaceCount = 0;
+    int wordsCount = 0;
+    boolean inWord = false;
 
-public static void task0_3(){
-    HashMap<String, Integer> map = new HashMap<>();
+    for (int i = 0; i < content.length(); i++) {
+        char c = content.charAt(i);
 
-}
-
-public static void task0_3AddProduct(HashMap<String, Integer> stock, String productName,int quantity){
-    System.out.println("Add");
-    if(quantity<=0)
-        throw new IllegalArgumentException("Количество должно быть > 0");
-    if(stock.containsKey(productName)){
-        stock.put(productName, stock.get(productName)+quantity );
-    }else {
-        stock.put(productName, quantity);
-    }
-}
-
-public static void task0_3SellProduct(HashMap<String, Integer> stock, String productName,int quantity){
-    System.out.println("Sell");
-    if(!stock.containsKey(productName))
-        throw new NoSuchElementException("Товар отсутствует на складе");
-    if (quantity<=0)
-        throw new IllegalArgumentException("Количество продажи должно быть > 0");
-    if (stock.get(productName)<quantity)
-        throw new IllegalStateException("Недостаточно товара на складе");
-
-    stock.put(productName, stock.get(productName)-quantity);
-}
-
-public static void task0_3PrintStock(HashMap<String, Integer> stock){
-    System.out.println("Stock: ");
-    for (var item: stock.entrySet()){
-        System.out.println(item.getKey()+"->"+item.getValue());
-    }
-}
-
-public static ArrayList<String> task0_4(ArrayList<String> list){
-    HashMap<String, Integer> map = new HashMap<>();
-    ArrayList<String> duplicateLogins = new ArrayList<>();
-    for(var item: list){
-        if(map.containsKey(item))
-            map.put(item,map.get(item)+1);
-        else
-            map.put(item, 1);
-    }
-    for (var item: map.entrySet()){
-        if(item.getValue()>1)
-            duplicateLogins.add(item.getKey());
-    }
-    return duplicateLogins;
-}
-
-public static HashMap<String, Integer> task0_5(ArrayList<String> list){
-    HashMap<String, Integer> originalMap = new HashMap<>();
-    for(String item: list){
-        String[] itemData = item.split(" ");
-        String itemName = itemData[0];
-        int itemAmount  = Integer.parseInt(itemData[1]);
-        int newVal = originalMap.getOrDefault(itemName,0)+itemAmount;
-
-        originalMap.put(itemName, newVal);
-    }
-    return originalMap;
-}
-
-public  static void task0_6AddOrUpdatePlayer(HashMap<String, Integer> players, String playerName, String scoreToAddStr){
-    int score = Integer.parseInt(scoreToAddStr);
-    if(score<0) throw new IllegalArgumentException("score have to be positive");
-    int newScoreVal = players.getOrDefault(playerName,0)+score;
-    players.put(playerName, newScoreVal);
-}
-public static String task0_6GetTopPlayer(HashMap<String, Integer> players){
-    String topPlayer = "";
-    int max = 0;
-    for(var item: players.entrySet()){
-        if(item.getValue()>max){
-            max=item.getValue();
-            topPlayer=item.getKey();
+        if (c == ' ') {
+            spaceCount++;
+            inWord = false; // вышли из слова
+        } else if (c == '\n' || c == '\r') {
+            inWord = false; // перенос строки — тоже разделитель
+        } else {
+            if (!inWord) {
+                wordsCount++; // начинаем новое слово
+                inWord = true;
+            }
         }
     }
-    return topPlayer;
+    System.out.println("Всего символов: " + content.length());
+    System.out.println("Пробелов: " + spaceCount);
+    System.out.println("слов: " + wordsCount);
 }
-public static void task0_6RemovePlayer(HashMap<String, Integer> players, String playerName){
-    if(players.containsKey(playerName)){
-        players.remove(playerName);
-        System.out.println(playerName + " was deleted");
+
+public static void task0_3() throws IOException{
+//    write
+//    String str = "aSECRET";
+//
+//    byte[] bytes=str.getBytes();
+//    Files.write(Path.of("secret.bin"), bytes);
+
+    //read
+    byte[] bytes = Files.readAllBytes(Path.of("secret.bin"));
+//    StringBuilder strBuilder = new StringBuilder();
+//    for(byte item: bytes){
+//        strBuilder.append((char) item);
+//    }
+//    String str = strBuilder.toString();
+    String str = new String(bytes, StandardCharsets.UTF_8);
+    System.out.println(str);
+}
+
+public static void task0_4() throws IOException{
+    String filename = "daily.txt";
+    Path p = Path.of(filename);
+    boolean isExists=Files.exists(p);
+    if (!isExists){
+        String str = "Первая запись в дневнике";
+        Files.writeString(p, str);
+    }else {
+        long size = Files.size(p);
+        System.out.println(size);
     }
-    else
-        System.out.println(playerName + " not found");
+//    System.out.println(isExists);
 }
 public static void main(String[] args){
+    //        task#0_1
+//    try {
+//        Path p = Path.of("hello.txt");
+//
+////        Files.writeString(p, "Привет, файл!");
+//        String content = Files.readString(p);
+//        System.out.println(content);
+//
+//        System.out.println(task0_1_readFile("hello.txt"));
+//
+//        ArrayList<String> list = new ArrayList<>(Arrays.asList("Молоко", "Хлеб","Яблоки","Сыр"));
+//        task0_1_writeFile(list, "hello.txt");
+//
+//    }catch (IOException e){
+//        System.out.println(e.getMessage());
+//    }
 
-//    task0_1();
-//    task0_2();
+    //        task#0_2
+//    try{
+//        task0_2("hello.txt");
+//    }catch(IOException e){
+//        System.out.println(e.getMessage());
+//    }
 
     //task0_3
-//    HashMap<String, Integer> stock = new HashMap<>();
-//    stock.put("Apple", 5);
-//    stock.put("Banana", 3);
-//    stock.put("Orange", 7);
 //    try{
-//        task0_3PrintStock(stock);
-//        task0_3AddProduct(stock, "Apple", -10);
-//        task0_3PrintStock(stock);
-//        task0_3AddProduct(stock, "Kiwi", 8);
-//        task0_3PrintStock(stock);
-//        task0_3SellProduct(stock, "Kiwi", 4);
-//        task0_3PrintStock(stock);
+//        task0_3();
 //
-//    }catch(Exception e){
+//    }catch(IOException e){
 //        System.out.println(e.getMessage());
 //    }
 
     //task0_4
-//    ArrayList<String> logins = new ArrayList<>(Arrays.asList(
-//            "alice", "bob", "charlie", "alice", "david", "bob", "eve", "frank"
-//    ));
-//    System.out.println(task0_4(logins));
-
-    //task0_5
-//    ArrayList<String> list = new ArrayList<>(Arrays.asList("Food t50", "Transport 20", "Food 30", "Entertainment 100"));
-//    System.out.println();
-//    try{
-//        System.out.println(task0_5(list));
-//    }catch(NumberFormatException e){
-//        System.out.println(e.getMessage());
-//    }
-
-    //task 0_6
-    String[] startingPlayers= {
-            "Alice 50",
-            "Bob 30",
-            "Charlie 40",
-            "Diana 25",
-            "Ethan 60"
-    };
-    HashMap<String, Integer> map = new HashMap<>();
-    for(String item: startingPlayers){
-        String player = item.substring(0, item.indexOf(" "));
-        String score = item.substring(item.indexOf(" ")+1);
-        try{
-            map.put(player, Integer.parseInt(score));
-        }catch(NumberFormatException e){
-            System.out.println("score " + score+ " is not a number");
-        }
-    }
-    System.out.println(map);
-
     try{
-        task0_6AddOrUpdatePlayer(map, "Dan", "22");
-        task0_6AddOrUpdatePlayer(map, "Diana", "10");
-        System.out.println(map);
-        task0_6RemovePlayer(map, "Bыob");
-        System.out.println(map);
+        task0_4();
 
-    }catch(NumberFormatException e){
+    }catch(IOException e){
         System.out.println(e.getMessage());
     }
-
-
-    System.out.println(task0_6GetTopPlayer(map));
-
 
 
 
