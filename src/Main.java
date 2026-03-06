@@ -1,142 +1,172 @@
+import com.sun.net.httpserver.Request;
 
-public static ArrayList<String> task0_1_readFile(String filename) throws IOException{
-//    Path p = Path.of(filename);
-//    String content = Files.readString(p);
-//
-//    ArrayList<String> list = new ArrayList<>();
-//    int ind = 0;
-//
-//    while (ind <= content.length()) {
-//        int enterInd = content.indexOf("\n", ind);
-//
-//        if (enterInd == -1) {
-//            enterInd = content.length();
-//        }
-//
-//        String item = content.substring(ind, enterInd).strip();
-//        list.add(item);
-//
-//        ind = enterInd + 1;
-//
-//        if (enterInd == content.length()) {
-//            break;
-//        }
-//    }
-//
-//    return list;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
-    return (ArrayList<String>) Files.readAllLines(Path.of(filename));
-}
-public static void task0_1_writeFile(ArrayList<String> list, String filename) throws IOException{
-//    StringBuilder listStr = new StringBuilder();
-//    for(String item: list){
-//        listStr.append(item + "\n");
-//    }
-//    String content=listStr.toString();
-//    Path p = Path.of(filename);
-//    Files.writeString(p, content);
-    Files.write(Path.of(filename),list);
+static HttpClient client = HttpClient.newHttpClient();
 
-}
-
-public static void task0_2(String filename)throws IOException{
-    String content = Files.readString(Path.of(filename)).strip();
-    int spaceCount = 0;
-    int wordsCount = 0;
-    boolean inWord = false;
-
-    for (int i = 0; i < content.length(); i++) {
-        char c = content.charAt(i);
-
-        if (c == ' ') {
-            spaceCount++;
-            inWord = false; // вышли из слова
-        } else if (c == '\n' || c == '\r') {
-            inWord = false; // перенос строки — тоже разделитель
-        } else {
-            if (!inWord) {
-                wordsCount++; // начинаем новое слово
-                inWord = true;
-            }
-        }
-    }
-    System.out.println("Всего символов: " + content.length());
-    System.out.println("Пробелов: " + spaceCount);
-    System.out.println("слов: " + wordsCount);
-}
-
-public static void task0_3() throws IOException{
-//    write
-//    String str = "aSECRET";
-//
-//    byte[] bytes=str.getBytes();
-//    Files.write(Path.of("secret.bin"), bytes);
-
-    //read
-    byte[] bytes = Files.readAllBytes(Path.of("secret.bin"));
-//    StringBuilder strBuilder = new StringBuilder();
-//    for(byte item: bytes){
-//        strBuilder.append((char) item);
-//    }
-//    String str = strBuilder.toString();
-    String str = new String(bytes, StandardCharsets.UTF_8);
-    System.out.println(str);
-}
-
-public static void task0_4() throws IOException{
-    String filename = "daily.txt";
-    Path p = Path.of(filename);
-    boolean isExists=Files.exists(p);
-    if (!isExists){
-        String str = "Первая запись в дневнике";
-        Files.writeString(p, str);
-    }else {
-        long size = Files.size(p);
-        System.out.println(size);
-    }
-//    System.out.println(isExists);
-}
-public static void main(String[] args){
-    //        task#0_1
-//    try {
-//        Path p = Path.of("hello.txt");
-//
-////        Files.writeString(p, "Привет, файл!");
-//        String content = Files.readString(p);
-//        System.out.println(content);
-//
-//        System.out.println(task0_1_readFile("hello.txt"));
-//
-//        ArrayList<String> list = new ArrayList<>(Arrays.asList("Молоко", "Хлеб","Яблоки","Сыр"));
-//        task0_1_writeFile(list, "hello.txt");
-//
-//    }catch (IOException e){
-//        System.out.println(e.getMessage());
-//    }
-
-    //        task#0_2
-//    try{
-//        task0_2("hello.txt");
-//    }catch(IOException e){
-//        System.out.println(e.getMessage());
-//    }
-
-    //task0_3
-//    try{
-//        task0_3();
-//
-//    }catch(IOException e){
-//        System.out.println(e.getMessage());
-//    }
-
-    //task0_4
+public static void task0_2(){
     try{
-        task0_4();
+        // Создаем новую колоду
+        String newDeckResponse = fetch("https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1");
+        System.out.println("Ответ сервера при создании колоды:");
+        System.out.println(newDeckResponse);
 
-    }catch(IOException e){
+        // извлечение deck_id из fetchBody
+        String deckId = getDataFromStr(newDeckResponse, "\"deck_id\": \"", 12, "\"");
+        System.out.println("Deck ID: " + deckId);
+
+        // Вытягиваем 1 карту
+        String drawOneResponse = fetch("https://deckofcardsapi.com/api/deck/" + deckId + "/draw/?count=1");
+        System.out.println("\nВытянутые карты (JSON):");
+
+//        // извлекаем value
+        String value = getDataFromStr(drawOneResponse, "\"value\": \"", 10, "\"");
+
+        // извлекаем suit
+        String suit = getDataFromStr(drawOneResponse, "\"suit\": \"", 9, "\"");
+
+        // извлекаем remaining
+        String remaining = getDataFromStr(drawOneResponse, "\"remaining\":", 12, "}");
+
+        // вывод результата
+        System.out.println("\nYou got: " + value + " of " + suit);
+        System.out.println("Cards remaining: " + remaining);
+        System.out.println(drawOneResponse);
+
+    }catch(IOException|InterruptedException e){
         System.out.println(e.getMessage());
     }
-
-
-
 }
+public static void task0_3(){
+    try{
+        // Создаем новую колоду
+        String newDeckResponse = fetch("https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1");
+
+        // извлечение deck_id из fetchBody
+        String deckId = getDataFromStr(newDeckResponse, "\"deck_id\": \"", 12, "\"");
+        System.out.println("Deck ID: " + deckId);
+
+        // Вытягиваем 1 карту
+        String drawFirstCardResponse = fetch("https://deckofcardsapi.com/api/deck/" + deckId + "/draw/?count=1");
+        String[] firstCardData = parseCard(drawFirstCardResponse);
+        String drawSecondCardResponse = fetch("https://deckofcardsapi.com/api/deck/" + deckId + "/draw/?count=1");
+        String[] secondCardData = parseCard(drawSecondCardResponse);
+
+        int cardVal1 = getCardIntValue(firstCardData[0]);
+        int cardVal2 = getCardIntValue(secondCardData[0]);
+
+        // вывод результата
+        System.out.println(String.format("Card 1: %s of %s", firstCardData[0], firstCardData[1]));
+        System.out.println(String.format("Card 2: %s of %s", secondCardData[0], secondCardData[1]));
+        if(cardVal1 > cardVal2){
+            System.out.println("Winner: Card 1");
+        }
+        else if(cardVal2 > cardVal1){
+            System.out.println("Winner: Card 2");
+        }
+        else{
+            System.out.println("Tie!");
+        }
+        System.out.println("Cards remaining: " + secondCardData[2]);
+
+    }catch(IOException|InterruptedException|NumberFormatException e){
+        System.out.println(e.getMessage());
+    }
+}
+public static void task0_5(){
+    try{
+        // Создаем новую колоду
+        String newDeckResponse = fetch("https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1");
+
+        // извлечение deck_id из fetchBody
+        String deckId = getDataFromStr(newDeckResponse, "\"deck_id\": \"", 12, "\"");
+        System.out.println("Your hand:");
+        String cardVal="";
+        do {
+            // Вытягиваем карту
+            String drawFirstCardResponse = fetch("https://deckofcardsapi.com/api/deck/" + deckId + "/draw/?count=1");
+            String[] firstCardData = parseCard(drawFirstCardResponse);
+            cardVal = firstCardData[0];
+            System.out.println(cardVal + " of " + firstCardData[1]);
+        }while (!cardVal.equals("ACE"));
+
+    }catch(IOException|InterruptedException|NumberFormatException e){
+        System.out.println(e.getMessage());
+    }
+}
+
+public static String getDataFromStr(String str, String startVal, int offset, String endVal){
+    int start = str.indexOf(startVal) + offset;
+    int end = str.indexOf(endVal, start);
+
+    String res = str.substring(start, end);
+
+    return res;
+}
+
+public static String fetch(String url) throws IOException, InterruptedException{
+    HttpRequest req = HttpRequest.newBuilder(URI.create(url)).GET().build();
+    HttpResponse<String> res = client.send(req, HttpResponse.BodyHandlers.ofString());
+
+    return res.body();
+}
+
+public static String[] parseCard(String str){
+    // извлекаем value
+    String value = getDataFromStr(str, "\"value\": \"", 10, "\"");
+
+    // извлекаем suit
+    String suit = getDataFromStr(str, "\"suit\": \"", 9, "\"");
+
+    // извлекаем remaining
+    String remaining = getDataFromStr(str, "\"remaining\":", 12, "}");
+    return new String[]{value, suit, remaining};
+}
+
+public static int getCardIntValue(String cardValue){
+    int res = switch (cardValue){
+        case "JACK" -> 11;
+        case "QUEEN" -> 12;
+        case "KING" -> 13;
+        case "ACE" -> 14;
+        default -> Integer.parseInt(cardValue);
+    };
+    return res;
+}
+
+public static String getCardStringValue(int cardValue){
+    String res = switch (cardValue){
+        case 11 -> "JACK";
+        case 12 -> "QUEEN";
+        case 13 -> "KING";
+        case 14 -> "ACE";
+        default -> cardValue+"";
+    };
+    return res;
+}
+
+
+
+
+public static void main(String[] args)  {
+//    task0_2();
+//    task0_3();
+    task0_5();
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }
