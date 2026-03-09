@@ -1,99 +1,114 @@
-public static void task0_1() throws IOException{
-    String dateStr = Files.readString(Path.of("birthday.txt"));
-    System.out.println(dateStr);
-    LocalDate date = LocalDate.parse(dateStr);
-    System.out.println(date);
-    System.out.println(date.getDayOfWeek());
-}
-public static void task0_2() throws IOException{
-    String filename = "current_time.txt";
-    LocalTime time = LocalTime.now();
-    System.out.println(time);
-    Files.writeString(Path.of(filename), time.toString());
+public static void task0_1(){
+    //0
+//    ZonedDateTime jerusalemTime = ZonedDateTime.now(ZoneId.of("Asia/Jerusalem"));
 
-    String timeStr = Files.readString(Path.of(filename));
-    LocalTime time2 = LocalTime.parse(timeStr);
-    System.out.println(time2);
-}
-public static void task0_3() throws  IOException, DateTimeParseException{
-    String filename = "meeting_times.txt";
     //1
-    String times = Files.readString(Path.of(filename));
-    String[] arr = times.split("\\R");
-    LocalTime time1 = LocalTime.parse(arr[0]);
-    LocalTime time2 = LocalTime.parse(arr[1]);
-
-    //2
-//    List<String> times = Files.readAllLines(Path.of(filename));
-//    LocalTime time1 = LocalTime.parse(times.get(0));
-//    LocalTime time2 = LocalTime.parse(times.get(1));
+//    ZoneId jerusalem = ZoneId.of("Asia/Jerusalem");
+//    ZoneId london = ZoneId.of("Europe/London");
+//    ZoneId tokyo = ZoneId.of("Asia/Tokyo");
 //
-    if(time1.isAfter(time2))
-        System.out.println(time1);
-    else
-        System.out.println(time2);
-}
-public static void task0_5() throws IOException, DateTimeParseException, IllegalArgumentException{
-    String startDatesFilename = "start_dates.txt";
-    String endDatesFilename = "end_dates.txt";
-    List<String> startDates = Files.readAllLines(Path.of(startDatesFilename));
-    List<String> endDates = Files.readAllLines(Path.of(endDatesFilename));
-    if(startDates.size()!= endDates.size()) {
-        throw new IllegalArgumentException("not correct data in files");
-    }
-    for(int i=0; i<startDates.size(); i++){
-        LocalDate d1 = LocalDate.parse(startDates.get(i).trim());
-        LocalDate d2 = LocalDate.parse(endDates.get(i).trim());
-        if(d2.isBefore(d1)){
-            throw new IllegalArgumentException("End date before start date for event "+(i+1));
-        }
-        long days = ChronoUnit.DAYS.between(d1,d2);
-        System.out.println("Event# " + (i+1)+" lasts "+ days+ " days");
-    }
-}
-
-public static void task0_6(LocalDate date) throws IOException, DateTimeParseException, IllegalArgumentException {
-    String event_datesFilename = "event_dates.txt";
-    String event_namesFilename = "event_names.txt";
-    List<String> event_dates = Files.readAllLines(Path.of(event_datesFilename));
-    List<String> event_names = Files.readAllLines(Path.of(event_namesFilename));
-    if (event_names.size() != event_dates.size())
-        throw new IllegalArgumentException("not correct data in files");
-
-    //1
-//    for (int i = 0; i < event_dates.size(); i++) {
-//        LocalDate currentDate = LocalDate.parse(event_dates.get(i).trim());
-//        if (currentDate.equals(date)) {
-//            System.out.println(currentDate + " -> " + event_names.get(i));
-//            return;
-//        }
-//    }
-//    System.out.println("No event on this date");
+//    System.out.println("Jerusalem: " + ZonedDateTime.now(jerusalem));
+//    System.out.println("London: " + ZonedDateTime.now(london));
+//    System.out.println("Tokyo: " + ZonedDateTime.now(tokyo));
 
     //2
-    HashMap<LocalDate, String> events = new HashMap<>();
-    for(int i=0; i<event_dates.size(); i++){
-        events.put(LocalDate.parse(event_dates.get(i).trim()),event_names.get(i).trim());
-    }
-    if (events.containsKey(date)){
-        System.out.println(date + " -> " + events.get(date));
-    }else {
-        System.out.println("No event on this date");
+    String[] zones = {
+            "Asia/Jerusalem",
+            "Europe/London",
+            "Asia/Tokyo"
+    };
+
+    for(String zone : zones){
+        System.out.println(zone + ": " +
+                ZonedDateTime.now(ZoneId.of(zone)));
     }
 }
 
-public static void main(String[] args)  {
+public static void task0_2(){
+    ZoneId laZone = ZoneId.of("America/Los_Angeles");
+    ZonedDateTime laTime = ZonedDateTime.now(laZone);
 
-    try {
-//        task0_1();
-//        task0_2();
-//        task0_3();
-//        task0_5();
-        LocalDate d = LocalDate.parse("2026-06-15");
-        task0_6(d);
-    }catch (IOException|DateTimeParseException e){
-        System.out.println(e.getMessage());
+    LocalTime currentTime = laTime.toLocalTime();
+
+    LocalTime start = LocalTime.of(9,0);
+    LocalTime end = LocalTime.of(17,0);
+
+    boolean isOpen =
+            !currentTime.isBefore(start) &&
+                    !currentTime.isAfter(end);
+
+    System.out.println("LA time: " + currentTime);
+    System.out.println("Support open: " + isOpen);
+}
+
+public static void task0_3(){
+    LocalDateTime meeting = LocalDateTime.of(2025, 6, 1, 19,00);
+    ZoneId jerusalem = ZoneId.of("Asia/Jerusalem");
+    ZoneId london = ZoneId.of("Europe/London");
+    ZoneId la = ZoneId.of("America/Los_Angeles");
+
+    ZonedDateTime jerusalemMeeting = meeting.atZone(jerusalem);
+    ZonedDateTime londonMeeting = jerusalemMeeting.withZoneSameInstant(london);
+    ZonedDateTime laMeeting = jerusalemMeeting.withZoneSameInstant(la);
+
+    System.out.println("Meeting in Jerusalem: " + jerusalemMeeting + "\n" +
+            "Meeting in London: "+ londonMeeting+ "\n" +
+            "Meeting in Los Angeles: "+ laMeeting);
+
+}
+
+public static void task0_4() throws InterruptedException{
+    HashMap<String, Instant> events = new HashMap<>();
+    events.put("Server started", Instant.now());
+    Thread.sleep(1000);
+    events.put("User login", Instant.now());
+    Thread.sleep(1000);
+    events.put("Data backup", Instant.now());
+    Thread.sleep(1000);
+//    System.out.println(events);
+
+    ZoneId userZone = ZoneId.of("Asia/Tokyo");
+    for(var item: events.entrySet()){
+        System.out.println(item.getKey() + " -> " + item.getValue().atZone(userZone));
     }
+}
+
+public static void task0_5(){
+    HashMap<String, Instant> flights = new HashMap<>();
+    ZonedDateTime SU100 = ZonedDateTime.of(LocalDateTime.of(2025, 06,01,10,0), ZoneId.of("Europe/Moscow"));
+    flights.put("SU100", SU100.toInstant());
+
+    ZonedDateTime BA200 = ZonedDateTime.of(LocalDateTime.of(2025, 06,01,14,30), ZoneId.of("Europe/London"));
+    flights.put("BA200", BA200.toInstant());
+
+    ZonedDateTime JL300 = ZonedDateTime.of(LocalDateTime.of(2025, 06,01,18,0), ZoneId.of("Asia/Tokyo"));
+    flights.put("JL300", JL300.toInstant());
+
+    for(var item: flights.entrySet()){
+        System.out.println(item.getKey()+" -> "+item.getValue());
+    }
+    Instant earliestTime = null;
+    String earliestFlight = null;
+
+    for (var entry : flights.entrySet()) {
+        if (earliestTime == null || entry.getValue().isBefore(earliestTime)) {
+            earliestTime = entry.getValue();
+            earliestFlight = entry.getKey();
+        }
+    }
+    System.out.println("earliestFlight: " + earliestFlight + "-> " + earliestTime);
+}
+public static void main(String[] args)  {
+//    task0_1();
+//    task0_2();
+//    task0_3();
+//    try{
+//        task0_4();
+//    }catch(InterruptedException e){
+//        System.out.println(e.getMessage());
+//    }
+    task0_5();
+
 
 
 
