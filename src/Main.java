@@ -1,51 +1,66 @@
 public static void task0_1(){
-    LocalTime time = LocalTime.now();
-    DateTimeFormatter tForm = DateTimeFormatter.ofPattern("HH:mm:ss");
-    String timeStr = time.format(tForm);
-    System.out.println(timeStr);
+    Scanner scan = new Scanner(System.in);
+    System.out.println("Enter the date in format: yyyy-MM-d");
+    String dateStr = scan.nextLine();
+    DateTimeFormatter fIn = DateTimeFormatter.ofPattern("yyyy-MM-d");
+    LocalDate date = LocalDate.parse(dateStr, fIn);
+    LocalDate reminderDate = date.minusDays(7);
+    System.out.println("Event date: " + date.format(fIn));
+    System.out.println("Reminder date: " + reminderDate.format(fIn));
 }
 
 public static void task0_2(){
-    Scanner scan = new Scanner(System.in);
-    System.out.println("Enter the date in format: dd.MM.yyyy");
-    String userInputDate = scan.nextLine();
-    DateTimeFormatter fInput = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-    DateTimeFormatter fOutput = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    LocalDate date = LocalDate.parse(userInputDate, fInput);
-    String dateStr = date.format(fOutput);
-    System.out.println(dateStr);
+    String dateStr = "2025-05-20"; //строка уже в ISO формате
 
-}
-
-public static void task0_3(){
-    Scanner scan = new Scanner(System.in);
-    System.out.println("Enter the date in format: dd.MM.yyyy");
-    String userInputDate = scan.nextLine();
-    DateTimeFormatter fInput = DateTimeFormatter.ofPattern("dd.MM.yyyy",new Locale("ru"));
-    LocalDate date = LocalDate.parse(userInputDate, fInput);
-    String dayValue = date.getDayOfWeek().toString();
-    System.out.println("День недели: " + dayValue);
-
-
-
+    LocalDate taskDate = LocalDate.parse(dateStr);
+    LocalDate today = LocalDate.now();
+    long days = ChronoUnit.DAYS.between(taskDate, today);
+    System.out.println("Задача создана " + days + " дней назад");
 }
 
 public static void task0_4(){
-    String checkInDate = "10.07.2025";
-    String checkOutDate = "18.07.2025";
+    Scanner scan = new Scanner(System.in);
+    System.out.println("Enter your birthday in format \"dd.MM.yyyy\": ");
+    String birthdayStr = scan.nextLine();
+    DateTimeFormatter f = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+    LocalDate birthday = LocalDate.parse(birthdayStr,f);
+    LocalDate now = LocalDate.now();
+    if (birthday.isAfter(now)) {
+        System.out.println("Дата рождения не может быть в будущем");
+        return;
+    }else {
+        Period p = Period.between(birthday, now);
+        System.out.println(String.format("Возраст: %d года %d месяца %d дней", p.getYears(), p.getMonths(), p.getDays()));
+    }
+}
 
-    DateTimeFormatter fInput = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-    LocalDate checkIn = LocalDate.parse(checkInDate, fInput);
-    LocalDate checkOut = LocalDate.parse(checkOutDate, fInput);
-    long days = ChronoUnit.DAYS.between(checkIn, checkOut);
-    System.out.println("Количество дней проживания: " + days);
+public static void task0_3(){
+    LocalDate deadline = LocalDate.parse("2026-04-11");
+    LocalDate now = LocalDate.now();
+    long days = ChronoUnit.DAYS.between(now, deadline);
+
+    if (days > 0) {
+        System.out.println("До дедлайна осталось " + days + " дней");
+    }
+    else if (days == 0) {
+        System.out.println("Сегодня дедлайн!");
+    }
+    else {
+        System.out.println("Дедлайн прошёл " + Math.abs(days) + " дней назад");
+    }
+//    System.out.println(deadline);
+
+
+
 }
 
 public static void task0_5(){
-    LocalDate date = LocalDate.of(2025, 06, 1);
-    DateTimeFormatter fIn = DateTimeFormatter.ofPattern("d MMMM yyyy", new Locale("ru"));
-    String dateStr = date.format(fIn);
-    System.out.println(dateStr);
+    DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    LocalDateTime t1 = LocalDateTime.parse("2025-06-01 09:30", f);
+    LocalDateTime t2 = LocalDateTime.parse("2025-06-01 17:45", f);
+    Duration time = Duration.between(t1,t2);
+    System.out.println(time);
+    System.out.println("Рабочее время: "+time.toHours()+" часов "+time.toMinutes()%60+" минут" );
 }
 public static void main(String[] args)  {
     try{
