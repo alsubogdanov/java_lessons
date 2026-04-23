@@ -1,51 +1,38 @@
-public static void task0_1(){
+@FunctionalInterface
+interface StringProcessor {
+    String process(String s);
+}
 
+public static void task0_1(){
+    Runnable printHello = ()-> System.out.println("Hello, Lambda!");
+    printHello.run();
 }
 
 public static void task0_2(){
 
-
+    Function<Integer, Integer> doubleNumber = (x)->x*2;
+    System.out.println(doubleNumber.apply(5));
 }
-
-public static void task0_4(){
-
-}
-
 public static void task0_3(){
-
+    List<Integer> nums = Arrays.asList(5, 1, 10, 3, 2);
+    nums.sort((a,b)->b-a);
+    System.out.println(nums);
 
 
 }
+public static void task0_4(){
+    StringProcessor st = (s)-> new StringBuilder(s).reverse().toString();
+    System.out.println(st.process("Hello"));
+
+}
+
+
 
 public static void task0_5(){
 
 }
 public static void main(String[] args)  {
-    //Task1
-//    Computer comp = new Computer();
-//    Computer.CPU cc = comp.new CPU();
-//    cc.print();
 
-    //Task2
-//    Book b1 = new Book("Java Basics");
-//    Book.Page bp = b1.new Page(10);
-//    bp.printPage();
-
-    //Task3
-//    Team t1 = new Team("Barcelona");
-//    Team.Player tp1 = t1.new Player("Messi");
-//    tp1.printInfo();
-
-    //Task5
-    String[] songs = {"Imagine", "Yesterday", "Let it be"};
-
-    Playlist playlist = new Playlist(songs);
-
-    Playlist.Player player = playlist.new Player();
-
-    while (player.hasNext()) {
-        System.out.println("Song: " + player.nextSong());
-    }
 
 
 
