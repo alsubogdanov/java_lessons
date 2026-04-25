@@ -1,50 +1,91 @@
-@FunctionalInterface
-interface StringProcessor {
-    String process(String s);
-}
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
-public static void task0_1(){
-    Runnable printHello = ()-> System.out.println("Hello, Lambda!");
-    printHello.run();
-}
+public class Main {
+    @FunctionalInterface
+    interface Printer {
+        void print(String text);
+    }
 
-public static void task0_2(){
+    @FunctionalInterface
+    interface StringToInt {
+        int convert(String s);
+    }
 
-    Function<Integer, Integer> doubleNumber = (x)->x*2;
-    System.out.println(doubleNumber.apply(5));
-}
-public static void task0_3(){
-    List<Integer> nums = Arrays.asList(5, 1, 10, 3, 2);
-    nums.sort((a,b)->b-a);
-    System.out.println(nums);
+    @FunctionalInterface
+    interface StringLength {
+        int apply(String s);
+    }
+
+    @FunctionalInterface
+    interface IntProcessor {
+        String process(int x);
+    }
+
+    public static int getLength(String s) {
+        return s.length();
+    }
+
+    public static void run(IntProcessor processor) {
+        System.out.println(processor.process(10));
+    }
+
+    public static void task0_1(){
+        Printer p2 = System.out::println;
+        p2.print("Hi");
+    }
+    public static void task0_2(){
+        String[] numbers = {"10", "20", "30"};
+        StringToInt converter1 = (s)->Integer.parseInt(s);
+        System.out.println(converter1.convert("123"));
+
+        StringToInt converter2 = Integer::parseInt;
+        System.out.println(converter2.convert("1234"));
+
+        for(String item: numbers){
+            System.out.println(converter1.convert(item));
+            System.out.println(converter2.convert(item));
+        }
+
+    }
+    public static void task0_3(){
+        StringLength s1 = Main::getLength;
+        StringLength s2 = (s)->getLength(s);
+        System.out.println(s1.apply("java"));
+        System.out.println(s2.apply("java-new"));
+
+    }
+    public static void task0_4(){
+        List<User> users = new ArrayList<>();
+        users.add(new User("Boris"));
+        users.add(new User("Anna"));
+        users.add(new User("Kate"));
+        users.add(new User("Dan"));
+        users.add(new User("Alex"));
+        for(User item: users){
+            System.out.println(item.getName());
+        }
+
+//        users.sort((b,a)->a.getName().compareTo(b.getName()));
+        users.sort(Comparator.comparing(User::getName));
+        for(User item: users){
+            System.out.println(item.getName());
+
+        }
+
+    }
+    public static void task0_5(){
+        run((x)->Integer.toHexString(x));
+        run(Integer::toHexString);
+        run((x)->"Result: " + Integer.toHexString(x));
+    }
 
 
-}
-public static void task0_4(){
-    StringProcessor st = (s)-> new StringBuilder(s).reverse().toString();
-    System.out.println(st.process("Hello"));
-
-}
-
-
-
-public static void task0_5(){
-
-}
-public static void main(String[] args)  {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    public static void main(String[] args) {
+//        task0_2();
+//        task0_3();
+//        task0_4();
+        task0_5();
+    }
 }
