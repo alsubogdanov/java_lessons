@@ -5,32 +5,21 @@ public class Main {
 
 
     public static void task0_1(){
-        List<String> list = new ArrayList<>(Arrays.asList("login", "open", "click", "click", "error", "logout"));
-        System.out.println(list.lastIndexOf("click"));
 
     }
     public static void task0_2(){
-        List<String> list = new ArrayList<>(Arrays.asList("login", "open", "click", "click", "error", "logout"));
-        list.removeIf(item->item.equals("click"));
-        System.out.println(list);
+
     }
     public static void task0_3(){
-        List<String> list = new ArrayList<>(Arrays.asList("step1", "step2", "step3"));
-        list.add(1, "step1.5");
-        System.out.println(list);
+
 
     }
     public static void task0_4(){
-        List<Integer> list = new ArrayList<>(Arrays.asList(3, 7, 2, 9, 12, 5, 8));
-        list.removeIf(el->el>7);
-        System.out.println(list);
+
 
     }
     public static void task0_5(){
-        List<Integer> list = new ArrayList<>(Arrays.asList(3, 7, 2, 9, 12, 5, 8));
-        list.add(0,list.get(list.size()-1));
-        list.remove(list.size()-1);
-        System.out.println(list);
+
     }
 
 
@@ -41,111 +30,202 @@ public class Main {
 //        task0_4();
 //        task0_5();
 
-        //Set
 
-        List<String> list = new ArrayList<>(Arrays.asList("a@mail.com", "b@mail.com", "a@mail.com"));
         //1
-        Set<String> set = new HashSet<>(list);
-//        System.out.println(set);
-        //2
-//        System.out.println(set.contains("b@mail.com"));
-
-        //3
-//        Set<String> users = new HashSet<>();
-//        Scanner scan = new Scanner(System.in);
+//        List<String> cards = List.of(
+//                "1234567812345678",
+//                "9999888877776666"
+//        );
 //
-//        for (int i = 0; i < 5; i++) {
-//            System.out.println("Enter user name:");
-//            String name = scan.nextLine();
-//            users.add(name);
+//        List<String> result = new ArrayList<>();
+//
+//        for (String card : cards) {
+//            String last4 = card.substring(card.length() - 4);
+//            result.add("****" + last4);
 //        }
-//        System.out.println(users);
 //
-        //4
-//        Set<String> set = new HashSet<>();
+//        System.out.println(result);
 //
-//        for (String e : list) {
-//            if (!set.add(e)) {
-//                return true; // дубликат найден
+//
+//        //2
+//        List<String> names = List.of(
+//                "Ivan Petrov",
+//                "Anna Smith"
+//        );
+//
+//        List<String> logins = new ArrayList<>();
+//
+//        for (String name : names) {
+//            String login = name.toLowerCase().replace(" ", "_");
+//            logins.add(login);
+//        }
+//
+//        System.out.println(logins);
+//        //3
+//        List<Integer> celsius = List.of(0, 20, 30);
+//
+//        List<Double> fahrenheit = new ArrayList<>();
+//
+//        for (Integer c : celsius) {
+//            double f = c * 9.0 / 5 + 32;
+//            fahrenheit.add(f);
+//        }
+//
+//        System.out.println(fahrenheit);
+//
+//        //4
+//        class Product {
+//            String name;
+//            boolean expired;
+//
+//            Product(String name, boolean expired) {
+//                this.name = name;
+//                this.expired = expired;
 //            }
 //        }
-//        return false;
-
-        //5
-//        Set<String> common = new HashSet<>(a);
-//        common.retainAll(b);
-
-
-        //Map
-        //1
-//        List<Integer> grades = new ArrayList<>(Arrays.asList(90, 80, 90, 70, 80, 90));
-//        Map<Integer, Integer> map = new HashMap<>();
-//        for(int item: grades){
-//            int count = map.getOrDefault(item,0);
-//            map.put(item, count+1);
-//        }
-//        System.out.println(map);
-
-        //2
-//        Map<String, Integer> map = new HashMap<>();
-//        map.put("Kate", 80);
-//        map.put("Dan", 80);
-//        map.put("Ben", 70);
-//        map.put("Olga", 70);
-//        map.put("Yan", 80);
 //
-//        Map<Integer, List<String>> res = new HashMap<>();
-
-        //👉 Проверяешь: есть ли уже такой ключ (оценка)
-        //👉 Если нет — создаёшь пустой список
-        //👉 Добавляешь имя в список
-//        for (Map.Entry<String, Integer> entry : map.entrySet()) {
-//            String name = entry.getKey();     // имя
-//            Integer grade = entry.getValue(); // оценка
+//        List<Product> products = List.of(
+//                new Product("Milk", true),
+//                new Product("Bread", false),
+//                new Product("Cheese", true)
+//        );
 //
-//            if (!res.containsKey(grade)) {
-//                res.put(grade, new ArrayList<>());
-//            }
-//            res.get(grade).add(name);
-//        }
-
-//        System.out.println(res);
-
-        //3
-//        List<String> list2 = new ArrayList<>(Arrays.asList("asd","qwe","asd","asd","ert"));
-//        Map<String,Integer> res = new HashMap<>();
-//        for(String item: list2){
-//            int count = res.getOrDefault(item, 0);
-//            res.put(item,count+1);
-//        }
-//        System.out.println(res);
-//        int maxVal = 0;
-//        String maxW = null;
-//        for(Map.Entry<String,Integer> m: res.entrySet()){
-//            if(m.getValue()>maxVal) {
-//                maxVal = m.getValue();
-//                maxW=m.getKey();
+//        List<String> expiredNames = new ArrayList<>();
+//
+//        for (Product p : products) {
+//            if (p.expired) {
+//                expiredNames.add(p.name);
 //            }
 //        }
-//        System.out.println(maxW);
-
-        //4
-//        создаётся новая HashMap, куда копируются все пары из a
-//        Map<String, Integer> result = new HashMap<>(a);
 //
-//        for (Map.Entry<String, Integer> e : b.entrySet()) {
-//        result.getOrDefault(key, 0)
-//        если ключ есть → берём значение
-//        если нет → берём 0
-//            result.put(e.getKey(),
-//                    result.getOrDefault(e.getKey(), 0) + e.getValue());
-//        }
-
-        //5
-//        Map<String, Integer> api = new HashMap<>();
+//        System.out.println(expiredNames);
+//        //5
+//        List<String> employees = List.of("Anna", "Boris", "Kate");
 //
-//        for (String url : requests) {
-//            api.put(url, api.getOrDefault(url, 0) + 1);
+//        List<String> emails = new ArrayList<>();
+//
+//        for (String employee : employees) {
+//            emails.add(employee.toLowerCase() + "@company.com");
 //        }
+//
+//        System.out.println(emails);
+//
+//        //6
+//        List<Integer> amounts = List.of(500, 1200, 3000, 700);
+//
+//        List<String> result = new ArrayList<>();
+//
+//        for (Integer amount : amounts) {
+//            if (amount > 1000) {
+//                result.add("VIP");
+//            } else {
+//                result.add("REGULAR");
+//            }
+//        }
+//
+//        System.out.println(result);
+//
+//        //7
+//        List<Integer> occupied = List.of(1, 3, 5, 7);
+//
+//        List<Integer> free = new ArrayList<>();
+//
+//        for (int i = 1; i <= 10; i++) {
+//            if (!occupied.contains(i)) {
+//                free.add(i);
+//            }
+//        }
+//
+//        System.out.println(free);
+//
+//        //8
+//        List<String> messages = List.of(
+//                "hello",
+//                "java",
+//                "collections"
+//        );
+//
+//        List<String> result = new ArrayList<>();
+//
+//        for (String msg : messages) {
+//            result.add(msg.toUpperCase() + "!");
+//        }
+//
+//        System.out.println(result);
+//
+//        //9
+//        class Item {
+//            String name;
+//            double price;
+//            int quantity;
+//
+//            Item(String name, double price, int quantity) {
+//                this.name = name;
+//                this.price = price;
+//                this.quantity = quantity;
+//            }
+//        }
+//
+//        List<Item> items = List.of(
+//                new Item("Laptop", 1200, 2),
+//                new Item("Mouse", 25, 5)
+//        );
+//
+//        List<String> result = new ArrayList<>();
+//
+//        for (Item item : items) {
+//            double total = item.price * item.quantity;
+//            result.add(item.name + ": " + total);
+//        }
+//
+//        System.out.println(result);
+//        //10
+//        List<List<String>> schedule = List.of(
+//                List.of("Math", "English"),
+//                List.of("Physics")
+//        );
+//
+//        List<String> result = new ArrayList<>();
+//
+//        String[] days = {"Monday", "Tuesday"};
+//
+//        for (int i = 0; i < schedule.size(); i++) {
+//
+//            List<String> lessons = schedule.get(i);
+//
+//            for (String lesson : lessons) {
+//                result.add(days[i] + ": " + lesson);
+//            }
+//        }
+//
+//        System.out.println(result);
+//
+//        //11
+//        class User {
+//            String login;
+//            String password;
+//
+//            User(String login, String password) {
+//                this.login = login;
+//                this.password = password;
+//            }
+//        }
+//
+//        List<User> users = List.of(
+//                new User("anna", "123"),
+//                new User("boris", "qwerty123"),
+//                new User("kate", "abc")
+//        );
+//
+//        List<String> weakUsers = new ArrayList<>();
+//
+//        for (User user : users) {
+//            if (user.password.length() < 6) {
+//                weakUsers.add(user.login);
+//            }
+//        }
+//
+//        System.out.println(weakUsers);
+
     }
 }
