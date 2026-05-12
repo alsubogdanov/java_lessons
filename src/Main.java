@@ -6,47 +6,33 @@ public class Main {
 
 
     public static void task0_1(){
-        List<String> names = List.of("Anna", "Boris", "Alex", "Ivan", "Kate");
-        List<String> res = names.stream()
-                .limit(3)
-                .map(String::toUpperCase)
-                .collect(Collectors.toList());
+        List<Integer> numbers = List.of(3, 10, 15, 20, 25, 30);
+        numbers.stream()
+                .filter(el->el>15)
+                .forEach(System.out::println);
+
     }
     public static void task0_2(){
-        List<String> emails = List.of(
-                "a@mail.com",
-                "b@mail.com",
-                "a@mail.com",
-                "c@mail.com",
-                "b@mail.com"
-        );
-        List<String> res = emails.stream()
-                .distinct()
-                .limit(2)
-                .collect(Collectors.toList());
+        List<String> words = List.of("java", "stream", "api", "code");
+
     }
     public static void task0_3(){
-        List<Integer> scores = List.of(50, 90, 70, 100, 90, 60);
-        List<Integer> res = scores.stream()
-                .distinct()
-                .sorted((a,b)->b-a)
-                .limit(3)
+        List<Integer> data = List.of(5, 10, 15, 20, 25);
+        List<Integer> res = data.stream()
+                .filter(el->el%10==0)
+                .peek(el-> System.out.println("Прошло фильтр: "+el))
                 .collect(Collectors.toList());
-        System.out.println(res);
     }
     public static void task0_4(){
-        List<Product> products = List.of(
-                new Product("Phone", 900),
-                new Product("Laptop", 1500),
-                new Product("Mouse", 30),
-                new Product("Keyboard", 80),
-                new Product("Monitor", 300)
+        List<Student> students = List.of(
+                new Student("Anna", 90),
+                new Student("Boris", 45),
+                new Student("Alex", 75),
+                new Student("Ivan", 60)
         );
-        List<String> res = products.stream()
-                .filter(el->el.price>100)
-                .sorted((a,b)->b.price-a.price)
-                .limit(2)
-                .map(el->el.name)
+        List<String> res = students.stream()
+                .filter(el->el.score>=60)
+                .map(el->el+" passed")
                 .collect(Collectors.toList());
     }
     public static void task0_5(){
@@ -63,9 +49,9 @@ public class Main {
 
 
     public static void main(String[] args) {
-//        task0_1();
+        task0_1();
 //        task0_2();
-        task0_3();
+//        task0_3();
 //        task0_4();
 //        task0_11();
 
