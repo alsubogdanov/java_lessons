@@ -1,198 +1,220 @@
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.swing.border.EmptyBorder;
 
 public class Main {
+//    static JFrame jFrame = getFrame();
+//    static JPanel jPanel = new JPanel();
+
 
 
     public static void task0_1(){
-
-        JFrame frame = new JFrame();
-        frame.setLayout(new FlowLayout());
-
-        JTextField text1 = new JTextField(20);
-        JButton bAdd = new JButton("add");
-        JButton bDel = new JButton("delete");
-
-        frame.add(text1);
-        frame.add(bAdd);
-        frame.add(bDel);
-
-
-        frame.setSize(600,300);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JFrame frame = getFrame();
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+                System.out.println("Window opened");
+                frame.setTitle("Application Started");
+            }
+        });
         frame.setVisible(true);
     }
     public static void task0_2(){
-        JFrame frame = new JFrame();
-        frame.setLayout(new BorderLayout());
+        JFrame frame = getFrame();
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        frame.addWindowListener(new WindowAdapter() {
 
-        frame.add(new JButton("Top"), BorderLayout.NORTH);
-        frame.add(new JButton("Bottom"), BorderLayout.SOUTH);
-//        frame.add(new JButton("Left"), BorderLayout.WEST);
-//        frame.add(new JButton("Right"), BorderLayout.EAST);
-        frame.add(new JTextField(20), BorderLayout.CENTER);
+            @Override
+            public void windowClosing(WindowEvent e) {
+                int result = JOptionPane.showConfirmDialog(
+                        null,
+                        "Закрыть программу?"
+                );
 
-        frame.setSize(600,300);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                if(result == JOptionPane.YES_OPTION){
+                    System.exit(0);
+                }
+            }
+        });
         frame.setVisible(true);
     }
     public static void task0_3(){
-
-    }
-    public static void task0_4(){
-        JFrame frame = new JFrame();
-        Font font = new Font("NSimSun", Font.BOLD, 20);
-        frame.setLayout(new BorderLayout(10,20));
-
-        //NORTH
-        JPanel topPanel = new JPanel();
-        topPanel.setBorder(new EmptyBorder(60,10,10,10));
-
-        JLabel title = new JLabel("Login System", SwingConstants.RIGHT);
-//        title.setBorder(new EmptyBorder(0,0,0,20));
-        title.setFont(new Font("Arial", Font.BOLD, 18));
-        topPanel.add(title,BorderLayout.NORTH);
-
-        //CENTER
-        JPanel centerPanel = new JPanel();
-        centerPanel.setLayout(new FlowLayout());
+        JFrame frame = getFrame();
+        JPanel panel = new JPanel();
+        frame.addWindowListener(new WindowAdapter() {
 
 
-        JLabel username = new JLabel("Username");
-        JTextField text = new JTextField(10);
-        JLabel passLabel = new JLabel("password");
-        JPasswordField pass = new JPasswordField(10);
-        JButton loginBtn = new JButton("Login");
-        centerPanel.add(username);
-        centerPanel.add(text);
-        centerPanel.add(passLabel);
-        centerPanel.add(pass);
-        centerPanel.add(loginBtn);
-
-        //SOUTH
-        JPanel southPanel = new JPanel();
-        southPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        southPanel.setBorder(new EmptyBorder(10,10,30,10));
-
-        JLabel bottomText = new JLabel("Status: Not logged in");
-        southPanel.add(bottomText);
-
-
-        //task#0_6
-        //EAST
-        JPanel eastPanel = new JPanel();
-        eastPanel.setLayout(new GridLayout(3,2, 20,0));
-        eastPanel.setBorder(new EmptyBorder(10,10,10,10));
-//        eastPanel.setPreferredSize(new Dimension(200, frame.getHeight()));
-
-        JLabel[] arrLabels = {
-                new JLabel("Server"),
-                new JLabel("ActiveActive"),
-                new JLabel("Users"),
-                new JLabel("5"),
-                new JLabel("Mode"),
-                new JLabel("Admin")
-        };
-        for(JLabel item: arrLabels){
-            eastPanel.add(item);
-        }
-
-        //task#0_7
-        //WEST
-        JPanel westPanel = new JPanel();
-        westPanel.setLayout(new GridLayout(2,1,20,10));
-        JButton upBtn = new JButton("Up");
-        JButton downBtn = new JButton("Down");
-        westPanel.add(upBtn);
-        westPanel.add(downBtn);
-
-
-
-        frame.add(topPanel, BorderLayout.NORTH);
-        frame.add(centerPanel, BorderLayout.CENTER);
-        frame.add(southPanel, BorderLayout.SOUTH);
-        frame.add(eastPanel, BorderLayout.EAST);
-        frame.add(westPanel, BorderLayout.WEST);
-
-
-
-
-        Toolkit toolkit = Toolkit.getDefaultToolkit();
-        toolkit.beep();
-        Dimension dimension = toolkit.getScreenSize();
-        frame.setBounds(dimension.width/2-400, dimension.height/2-150, 800, 300);
-
-        frame.setSize(800,300);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
-
-    }
-    public static void task0_5(){
-    }
-    public static void task0_6(){
-    }
-    public static void task0_7(){
-    }
-    public static void task0_10(){
-        JFrame jFrame = getFrame();
-        JPanel jPanel = new JPanel();
-        jFrame.add(jPanel);
-        JButton btn = new JButton("submit");
-        jPanel.add(btn);
-
-        //EventHandler
-        btn.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                jFrame.setTitle(((JButton)e.getSource()).getText());
-                jPanel.setBackground(Color.RED);
+            public void windowActivated(WindowEvent e) {
+                panel.setBackground(Color.GREEN);
+
+            }
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {
+                panel.setBackground(Color.GRAY);
             }
         });
 
+        frame.add(panel);
+        frame.setVisible(true);
+    }
+    public static void task0_4(){
+        JFrame frame = getFrame();
+        JPanel panel = new JPanel();
+        AtomicInteger minimizedInt = new AtomicInteger(0);
+        AtomicInteger restoredInt = new AtomicInteger(0);
+        JLabel minimized = new JLabel("Minimized: 0");
+        JLabel restored = new JLabel("Restored: 0");
+
+        panel.add(minimized);
+        panel.add(restored);
+
+        frame.addWindowListener(new WindowAdapter() {
+
+            @Override
+            public void windowIconified(WindowEvent e) {
+                minimizedInt.incrementAndGet();
+                minimized.setText("Minimized: " + minimizedInt.get());
+            }
+
+            @Override
+            public void windowDeiconified(WindowEvent e) {
+                restoredInt.incrementAndGet();
+                restored.setText("Restored: "+restoredInt.get());
+            }
+        });
+
+        frame.add(panel);
+        frame.setVisible(true);
+    }
+    public static void task0_5(){
+        JFrame frame = getFrame();
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
+        JPanel panel = new JPanel();
+        JLabel label = new JLabel("Enter your text");
+        JTextArea textArea = new JTextArea(5, 20);
+
+        panel.add(label);
+        panel.add(textArea);
+
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                String text = textArea.getText();
+
+                if (text.isEmpty()) {
+                    frame.dispose();
+                    return;
+                }
+
+                int result = JOptionPane.showConfirmDialog(
+                        frame,
+                        "Save changes before exit?"
+                );
+
+                if (result == JOptionPane.YES_OPTION) {
+
+                    System.out.println("Saving file...");
+                    System.out.println("File content:");
+                    System.out.println(text);
+                    System.out.println("Saved successfully!");
+
+                    frame.dispose();
+
+                } else if (result == JOptionPane.NO_OPTION) {
+                    frame.dispose();
+                }
+                // CANCEL → ничего не делаем
+            }
+        });
+
+        frame.add(panel);
+        frame.setVisible(true);
+    }
+
+    public static void task0_6(){
+        JFrame frame = getFrame();
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        JPanel panel = new JPanel();
+        JLabel label = new JLabel("Your logs:");
+        JTextArea textArea = new JTextArea(5,30);
+        textArea.setLineWrap(true); //переносит текст на новую строку
+        textArea.setWrapStyleWord(true); // перенос по словам (а не по символам)
+
+        JScrollPane scrollPane = new JScrollPane(textArea);
+
+        panel.add(label);
+        panel.add(scrollPane);
+
+        frame.add(panel);
+
+
+        frame.addWindowListener(new WindowAdapter() {
+
+            @Override
+            public void windowOpened(WindowEvent e) {
+                textArea.append("\nopened");
+                textArea.setCaretPosition(textArea.getDocument().getLength());
+            }
+
+            @Override
+            public void windowIconified(WindowEvent e) {
+                textArea.append("\nminimized");
+                textArea.setCaretPosition(textArea.getDocument().getLength());
+            }
+
+            @Override
+            public void windowDeiconified(WindowEvent e) {
+                textArea.append("\nrestored");
+                textArea.setCaretPosition(textArea.getDocument().getLength());
+            }
+
+            @Override
+            public void windowActivated(WindowEvent e) {
+                textArea.append("\nactivated");
+                textArea.setCaretPosition(textArea.getDocument().getLength());
+            }
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {
+                textArea.append("\ndeactivated");
+                textArea.setCaretPosition(textArea.getDocument().getLength());
+            }
+        });
+        frame.setVisible(true);
+    }
+
+
+    public static void task0_7(){
+    }
+    public static void task0_10(){
     }
     static JFrame getFrame(){
         JFrame frame = new JFrame();
         Toolkit toolkit = Toolkit.getDefaultToolkit();
-        toolkit.beep();
+//        toolkit.beep();
         Dimension dimension = toolkit.getScreenSize();
         frame.setBounds(dimension.width/2-400, dimension.height/2-150, 800, 300);
 
-        frame.setSize(800,300);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+
+//        frame.setVisible(true);
         return frame;
     }
     public static void task0_11(){
-
-        JFrame jFrame = getFrame();
-        JPanel menu=new JPanel();
-        menu.setLayout(new BoxLayout(menu,BoxLayout.Y_AXIS));
-
-
-        JButton b1 = new JButton("Home");
-        b1.setAlignmentX(Component.CENTER_ALIGNMENT);
-        JButton b2 = new JButton("Profile");
-        b2.setAlignmentX(Component.CENTER_ALIGNMENT);
-        JButton b3 = new JButton("Settings");
-        b3.setAlignmentX(Component.CENTER_ALIGNMENT);
-        menu.add(b1);
-        menu.add(b2);
-//        menu.add(Box.createVerticalStrut(20));
-        menu.add(b3);
-        menu.add(new JButton("Logout"));
-
-
-        jFrame.add(menu);
-        jFrame.setVisible(true);
 
 
     }
@@ -200,16 +222,16 @@ public class Main {
 
 
     public static void main(String[] args) {
-//        task0_2();
-//        task0_4();
-//        String[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
-//        for(String item: fonts){
-//            System.out.println(item);
-//        }
 
-        task0_11();
+        task0_6();
+
+
+
+
+
 
 
 
     }
+
 }
