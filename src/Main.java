@@ -17,38 +17,41 @@ public class Main {
 //    static JPanel jPanel = new JPanel();
 
 
-
-    public static void task0_1(){
+    public static void task0_1() {
         JFrame frame = getFrame();
-        frame.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowOpened(WindowEvent e) {
-                System.out.println("Window opened");
-                frame.setTitle("Application Started");
-            }
+        JPanel panel = new JPanel();
+        JButton button = new JButton("Click me");
+        button.addActionListener(e -> {
+            button.setText("Clicked");
+            System.out.println("Button was clicked");
         });
+        panel.add(button);
+        frame.add(panel);
+
         frame.setVisible(true);
     }
-    public static void task0_2(){
+
+    public static void task0_2() {
         JFrame frame = getFrame();
-        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        frame.addWindowListener(new WindowAdapter() {
+        JPanel jPanel = new JPanel();
+        frame.add(jPanel);
 
-            @Override
-            public void windowClosing(WindowEvent e) {
-                int result = JOptionPane.showConfirmDialog(
-                        null,
-                        "Закрыть программу?"
-                );
+        ColorAction colorAction = new ColorAction(jPanel);
 
-                if(result == JOptionPane.YES_OPTION){
-                    System.exit(0);
-                }
-            }
-        });
+        JButton jButton = new JButton(colorAction);
+        jButton.setHorizontalTextPosition(SwingConstants.LEFT);
+        jButton.setHorizontalAlignment(SwingConstants.RIGHT);
+
+
+        JButton jButton1 = new JButton(new MyAction());
+        jPanel.add(jButton);
+        jPanel.add(jButton1);
+
+        frame.setJMenuBar(createMenuBar(jPanel, colorAction));
         frame.setVisible(true);
     }
-    public static void task0_3(){
+
+    public static void task0_3() {
         JFrame frame = getFrame();
         JPanel panel = new JPanel();
         frame.addWindowListener(new WindowAdapter() {
@@ -69,7 +72,8 @@ public class Main {
         frame.add(panel);
         frame.setVisible(true);
     }
-    public static void task0_4(){
+
+    public static void task0_4() {
         JFrame frame = getFrame();
         JPanel panel = new JPanel();
         AtomicInteger minimizedInt = new AtomicInteger(0);
@@ -91,147 +95,138 @@ public class Main {
             @Override
             public void windowDeiconified(WindowEvent e) {
                 restoredInt.incrementAndGet();
-                restored.setText("Restored: "+restoredInt.get());
+                restored.setText("Restored: " + restoredInt.get());
             }
         });
 
         frame.add(panel);
         frame.setVisible(true);
     }
-    public static void task0_5(){
+
+    public static void task0_5() {
         JFrame frame = getFrame();
-        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
+        Action a = new MyAction();
+        a.setEnabled(false);
         JPanel panel = new JPanel();
-        JLabel label = new JLabel("Enter your text");
-        JTextArea textArea = new JTextArea(5, 20);
 
-        panel.add(label);
-        panel.add(textArea);
+        JButton button = new JButton(a);
+        panel.add(button);
 
-        frame.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                String text = textArea.getText();
-
-                if (text.isEmpty()) {
-                    frame.dispose();
-                    return;
-                }
-
-                int result = JOptionPane.showConfirmDialog(
-                        frame,
-                        "Save changes before exit?"
-                );
-
-                if (result == JOptionPane.YES_OPTION) {
-
-                    System.out.println("Saving file...");
-                    System.out.println("File content:");
-                    System.out.println(text);
-                    System.out.println("Saved successfully!");
-
-                    frame.dispose();
-
-                } else if (result == JOptionPane.NO_OPTION) {
-                    frame.dispose();
-                }
-                // CANCEL → ничего не делаем
-            }
-        });
 
         frame.add(panel);
         frame.setVisible(true);
     }
 
-    public static void task0_6(){
-        JFrame frame = getFrame();
-        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        JPanel panel = new JPanel();
-        JLabel label = new JLabel("Your logs:");
-        JTextArea textArea = new JTextArea(5,30);
-        textArea.setLineWrap(true); //переносит текст на новую строку
-        textArea.setWrapStyleWord(true); // перенос по словам (а не по символам)
+    public static void task0_6() {
 
-        JScrollPane scrollPane = new JScrollPane(textArea);
-
-        panel.add(label);
-        panel.add(scrollPane);
-
-        frame.add(panel);
-
-
-        frame.addWindowListener(new WindowAdapter() {
-
-            @Override
-            public void windowOpened(WindowEvent e) {
-                textArea.append("\nopened");
-                textArea.setCaretPosition(textArea.getDocument().getLength());
-            }
-
-            @Override
-            public void windowIconified(WindowEvent e) {
-                textArea.append("\nminimized");
-                textArea.setCaretPosition(textArea.getDocument().getLength());
-            }
-
-            @Override
-            public void windowDeiconified(WindowEvent e) {
-                textArea.append("\nrestored");
-                textArea.setCaretPosition(textArea.getDocument().getLength());
-            }
-
-            @Override
-            public void windowActivated(WindowEvent e) {
-                textArea.append("\nactivated");
-                textArea.setCaretPosition(textArea.getDocument().getLength());
-            }
-
-            @Override
-            public void windowDeactivated(WindowEvent e) {
-                textArea.append("\ndeactivated");
-                textArea.setCaretPosition(textArea.getDocument().getLength());
-            }
-        });
-        frame.setVisible(true);
     }
 
 
-    public static void task0_7(){
+    public static void task0_7() {
     }
-    public static void task0_10(){
+
+    public static void task0_10() {
     }
-    static JFrame getFrame(){
+
+    static JFrame getFrame() {
         JFrame frame = new JFrame();
         Toolkit toolkit = Toolkit.getDefaultToolkit();
 //        toolkit.beep();
         Dimension dimension = toolkit.getScreenSize();
-        frame.setBounds(dimension.width/2-400, dimension.height/2-150, 800, 300);
+        frame.setBounds(dimension.width / 2 - 400, dimension.height / 2 - 150, 800, 300);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
 
 
 //        frame.setVisible(true);
         return frame;
     }
-    public static void task0_11(){
+
+    static JMenuBar createMenuBar(JPanel panel, Action colorAction) {
+        JMenuBar jMenuBar = new JMenuBar();
+
+/* =========================
+   MAIN MENUS (File, Edit)
+   ========================= */
+        JMenu file = new JMenu("File");
+        JMenu edit = new JMenu("Edit");
+
+// Mnemonic для быстрого доступа через Alt
+        file.setMnemonic('F'); // Alt + F
+        edit.setMnemonic('E'); // Alt + E
+
+        jMenuBar.add(file);
+        jMenuBar.add(edit);
+
+/* =========================
+   FILE MENU ITEMS
+   ========================= */
+
+// Open
+        JMenuItem open = new JMenuItem("Open");
+        open.addActionListener(e -> System.out.println("open"));
+        file.add(open);
+
+// Save (disabled пример)
+        JMenuItem save = new JMenuItem("Save");
+        file.add(save);
+// Change
+        JMenuItem changeColor = new JMenuItem(colorAction);
+        changeColor.setAccelerator(KeyStroke.getKeyStroke("ctrl Q"));
+        file.add(changeColor);
 
 
+/* =========================
+   EDIT MENU ITEMS
+   ========================= */
+
+// простые команды
+        edit.add(new JMenuItem("Cut"));
+        edit.add(new JMenuItem("Copy"));
+        return jMenuBar;
     }
-
-
 
     public static void main(String[] args) {
 
-        task0_6();
+        task0_2();
 
+    }
+    static class MyAction extends AbstractAction {
+        Icon icon = new ImageIcon(getClass().getResource("/icons/1.jpeg"));
+        public MyAction(){
+            putValue(Action.NAME, "Save");
+            putValue(Action.SHORT_DESCRIPTION, "Save file");
+            putValue(Action.SMALL_ICON, icon);
+        }
 
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.out.println("Action executed");
+        }
+    }
+    static class ColorAction extends AbstractAction {
+        private JPanel panel;
+        public ColorAction(JPanel panel){
+            this.panel=panel;
 
+            ImageIcon  icon = new ImageIcon(getClass().getResource("/icons/change.png"));
+            Image img = icon.getImage();
+            Image scaled = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
 
+            Icon smallIcon = new ImageIcon(scaled);
 
+            putValue(Action.NAME, "Change color");
+            putValue(Action.SHORT_DESCRIPTION, "Change color");
+            putValue(Action.SMALL_ICON, smallIcon);
+        }
 
-
-
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            panel.setBackground(Color.CYAN);
+            System.out.println("Action executed");
+        }
     }
 
 }
