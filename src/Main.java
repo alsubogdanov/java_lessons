@@ -20,54 +20,71 @@ public class Main {
     public static void task0_1() {
         JFrame frame = getFrame();
         JPanel panel = new JPanel();
+        panel.setFocusable(true);
+
+
         JButton button = new JButton("Click me");
-        button.addActionListener(e -> {
-            button.setText("Clicked");
-            System.out.println("Button was clicked");
-        });
+
+        KeyStroke keyStroke = KeyStroke.getKeyStroke("SPACE");
+
+        InputMap inputMap = panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        inputMap.put(keyStroke, "changeColor");
+
+        ActionMap actionMap = panel.getActionMap();
+
+        Action action = new ColorAction(panel);
+
+        actionMap.put("changeColor", action);
+
+
         panel.add(button);
         frame.add(panel);
 
         frame.setVisible(true);
+        panel.requestFocusInWindow();
     }
 
     public static void task0_2() {
         JFrame frame = getFrame();
-        JPanel jPanel = new JPanel();
-        frame.add(jPanel);
+        JPanel panel = new JPanel();
 
-        ColorAction colorAction = new ColorAction(jPanel);
+        KeyStroke keyStrokeRed = KeyStroke.getKeyStroke("ctrl  R");
+        KeyStroke keyStrokeGreen = KeyStroke.getKeyStroke("ctrl  G");
 
-        JButton jButton = new JButton(colorAction);
-        jButton.setHorizontalTextPosition(SwingConstants.LEFT);
-        jButton.setHorizontalAlignment(SwingConstants.RIGHT);
+        InputMap inputMap = panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        inputMap.put(keyStrokeRed, "changeColorRed");
+        inputMap.put(keyStrokeGreen, "changeColorGreen");
+
+        ActionMap actionMap = panel.getActionMap();
+
+        Action actionRed = new ChangeColorAction(panel,"RED");
+        Action actionGreen = new ChangeColorAction(panel,"GREEN");
+
+        actionMap.put("changeColorRed", actionRed);
+        actionMap.put("changeColorGreen", actionGreen);
 
 
-        JButton jButton1 = new JButton(new MyAction());
-        jPanel.add(jButton);
-        jPanel.add(jButton1);
+        frame.add(panel);
 
-        frame.setJMenuBar(createMenuBar(jPanel, colorAction));
         frame.setVisible(true);
     }
 
     public static void task0_3() {
         JFrame frame = getFrame();
         JPanel panel = new JPanel();
-        frame.addWindowListener(new WindowAdapter() {
+//        panel.setFocusable(true);
+        JLabel label = new JLabel("0");
+        panel.add(label);
 
 
-            @Override
-            public void windowActivated(WindowEvent e) {
-                panel.setBackground(Color.GREEN);
+        KeyStroke keyStroke = KeyStroke.getKeyStroke("SPACE");
 
-            }
+        InputMap inputMap = panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        inputMap.put(keyStroke, "counter inc");
 
-            @Override
-            public void windowDeactivated(WindowEvent e) {
-                panel.setBackground(Color.GRAY);
-            }
-        });
+        ActionMap actionMap = panel.getActionMap();
+        Action action = new CounterAction(label);
+        actionMap.put("counter inc", action);
 
         frame.add(panel);
         frame.setVisible(true);
@@ -76,58 +93,70 @@ public class Main {
     public static void task0_4() {
         JFrame frame = getFrame();
         JPanel panel = new JPanel();
-        AtomicInteger minimizedInt = new AtomicInteger(0);
-        AtomicInteger restoredInt = new AtomicInteger(0);
-        JLabel minimized = new JLabel("Minimized: 0");
-        JLabel restored = new JLabel("Restored: 0");
+        panel.setBackground(Color.GREEN);
+        JTextArea textArea=new JTextArea(5, 10);
+        textArea.setLineWrap(true); //переносит текст на новую строку
+        textArea.setWrapStyleWord(true); // перенос по словам (а не по символам)
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        panel.add(scrollPane);
 
-        panel.add(minimized);
-        panel.add(restored);
 
-        frame.addWindowListener(new WindowAdapter() {
-
+        bindKey(panel, "ctrl S", "save and print", new AbstractAction() {
             @Override
-            public void windowIconified(WindowEvent e) {
-                minimizedInt.incrementAndGet();
-                minimized.setText("Minimized: " + minimizedInt.get());
-            }
-
-            @Override
-            public void windowDeiconified(WindowEvent e) {
-                restoredInt.incrementAndGet();
-                restored.setText("Restored: " + restoredInt.get());
+            public void actionPerformed(ActionEvent e) {
+                String text = textArea.getText();
+                System.out.println("Text: "+ text);
             }
         });
+        bindKey(panel, "ESCAPE", "clear", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                textArea.setText("");
+            }
+        });
+        bindKey(panel, "ctrl L", "change bg", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panel.setBackground(Color.WHITE);
+            }
+        });
+
 
         frame.add(panel);
         frame.setVisible(true);
     }
 
     public static void task0_5() {
-        JFrame frame = getFrame();
 
-        Action a = new MyAction();
-        a.setEnabled(false);
+        JFrame frame = getFrame();
         JPanel panel = new JPanel();
 
-        JButton button = new JButton(a);
+        //TextArea
+        JTextArea textArea=new JTextArea(5, 10);
+        textArea.setLineWrap(true); //переносит текст на новую строку
+        textArea.setWrapStyleWord(true); // перенос по словам (а не по символам)
+
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        panel.add(scrollPane);
+
+        //Action
+        Action clear = new ClearAction(textArea);
+        JMenuBar menuBar = createMenuBar(panel, clear);
+        frame.setJMenuBar(menuBar);
+
+        //Btn
+        JButton button=new JButton(clear);
         panel.add(button);
+
+
+        bindKey(panel, "ctrl L", "clearText", clear);
 
 
         frame.add(panel);
         frame.setVisible(true);
     }
 
-    public static void task0_6() {
 
-    }
-
-
-    public static void task0_7() {
-    }
-
-    public static void task0_10() {
-    }
 
     static JFrame getFrame() {
         JFrame frame = new JFrame();
@@ -144,7 +173,7 @@ public class Main {
         return frame;
     }
 
-    static JMenuBar createMenuBar(JPanel panel, Action colorAction) {
+    static JMenuBar createMenuBar(JPanel panel, Action action) {
         JMenuBar jMenuBar = new JMenuBar();
 
 /* =========================
@@ -173,9 +202,9 @@ public class Main {
         JMenuItem save = new JMenuItem("Save");
         file.add(save);
 // Change
-        JMenuItem changeColor = new JMenuItem(colorAction);
-        changeColor.setAccelerator(KeyStroke.getKeyStroke("ctrl Q"));
-        file.add(changeColor);
+        JMenuItem clear = new JMenuItem(action);
+        clear.setAccelerator(KeyStroke.getKeyStroke("ctrl L"));
+        file.add(clear);
 
 
 /* =========================
@@ -188,22 +217,31 @@ public class Main {
         return jMenuBar;
     }
 
+    static void bindKey(JComponent component, String key, String actionName, Action action) {
+
+        KeyStroke keyStroke = KeyStroke.getKeyStroke(key);
+
+        InputMap inputMap = component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        inputMap.put(keyStroke, actionName);
+
+        ActionMap actionMap = component.getActionMap();
+        actionMap.put(actionName, action);
+    }
     public static void main(String[] args) {
 
-        task0_2();
+        task0_5();
 
     }
-    static class MyAction extends AbstractAction {
-        Icon icon = new ImageIcon(getClass().getResource("/icons/1.jpeg"));
-        public MyAction(){
-            putValue(Action.NAME, "Save");
-            putValue(Action.SHORT_DESCRIPTION, "Save file");
-            putValue(Action.SMALL_ICON, icon);
+    static class CounterAction extends AbstractAction {
+        private JLabel counter;
+        public CounterAction(JLabel counter){
+            this.counter=counter;
+
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            System.out.println("Action executed");
+            counter.setText(Integer.parseInt(counter.getText())+1+"");
         }
     }
     static class ColorAction extends AbstractAction {
@@ -226,6 +264,36 @@ public class Main {
         public void actionPerformed(ActionEvent e) {
             panel.setBackground(Color.CYAN);
             System.out.println("Action executed");
+        }
+    }
+    static class ChangeColorAction extends AbstractAction {
+        private JPanel panel;
+        private String color;
+        public ChangeColorAction(JPanel panel, String color){
+            this.panel=panel;
+            this.color=color;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.out.println("sdf");
+            switch (color){
+                case "RED"->panel.setBackground(Color.RED);
+                case "GREEN"->panel.setBackground(Color.GREEN);
+            }
+        }
+    }
+    static class ClearAction extends AbstractAction {
+        private JTextArea textArea;
+        public ClearAction(JTextArea textArea){
+            this.textArea=textArea;
+            putValue(NAME, "Clear");
+            putValue(SHORT_DESCRIPTION, "Clear textarea");
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            textArea.setText("");
         }
     }
 
